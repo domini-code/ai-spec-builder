@@ -134,4 +134,9 @@ AI Spec Builder convierte cualquier idea de producto en una especificación téc
 | Historial de versiones                | Sin base de datos no es viable. Candidato natural para v2.                         |
 | Estimaciones económicas de desarrollo | Calcular costes de desarrollo requiere datos de mercado y lógica compleja.         |
 
+### Features
+
+Exportar como Markdown
+Exportar como PDF
+
 ---
