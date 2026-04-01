@@ -24,3 +24,73 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@media print {
+  /* Hide everything except the print target */
+  body > * {
+    display: none !important;
+  }
+
+  #print-target {
+    display: block !important;
+    color: #000;
+    background: #fff;
+    font-family: Georgia, serif;
+    font-size: 12pt;
+    line-height: 1.6;
+    padding: 0;
+    margin: 0;
+  }
+
+  #print-target h1 {
+    font-size: 22pt;
+    font-weight: bold;
+    margin-bottom: 8pt;
+    border-bottom: 2pt solid #000;
+    padding-bottom: 4pt;
+  }
+
+  #print-target h2 {
+    font-size: 15pt;
+    font-weight: bold;
+    margin-top: 20pt;
+    margin-bottom: 6pt;
+    break-before: page;
+  }
+
+  #print-target h2:first-of-type {
+    break-before: avoid;
+  }
+
+  #print-target h3 {
+    font-size: 12pt;
+    font-weight: bold;
+    margin-top: 10pt;
+    margin-bottom: 4pt;
+  }
+
+  #print-target p,
+  #print-target li {
+    font-size: 11pt;
+    color: #000;
+  }
+
+  #print-target ul,
+  #print-target ol {
+    padding-left: 18pt;
+    margin-bottom: 6pt;
+  }
+
+  #print-target li {
+    margin-bottom: 3pt;
+  }
+
+  #print-target .flow {
+    margin-bottom: 12pt;
+  }
+
+  #print-target .error-path {
+    margin-top: 4pt;
+    color: #333;
+  }
+}
