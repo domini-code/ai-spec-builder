@@ -3,31 +3,29 @@
 import { useState, useRef, useEffect } from 'react';
 import SpecForm from '@/components/SpecForm';
 import SpecOutput from '@/components/SpecOutput';
-
-interface Flow {
-  name: string;
-  steps: string[];
-  error_path: string;
-}
-
-interface Spec {
-  vision: string;
-  users: string;
-  features: string[];
-  flows: Flow[];
-  architecture: string;
-  requirements: string;
-}
+import SpecSkeleton from '@/components/SpecSkeleton';
+import type { Spec } from '@/lib/validate-spec';
 
 export default function Home() {
   const [spec, setSpec] = useState<Spec | null>(null);
+  const [isStreaming, setIsStreaming] = useState(false);
   const outputRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (spec && outputRef.current) {
+    if ((isStreaming || spec) && outputRef.current) {
       outputRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-  }, [spec]);
+  }, [isStreaming, spec]);
+
+  function handleResult(s: Spec) {
+    setIsStreaming(false);
+    setSpec(s);
+  }
+
+  function handleReset() {
+    setSpec(null);
+    setIsStreaming(false);
+  }
 
   return (
     <main className="min-h-screen bg-gray-50 px-4 py-16">
@@ -44,13 +42,23 @@ export default function Home() {
 
         {/* Form */}
         <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-          <SpecForm onResult={(s) => setSpec(s)} />
+          <SpecForm
+            onResult={handleResult}
+            onStreamingChange={setIsStreaming}
+          />
         </div>
 
-        {/* Spec output */}
+        {/* Skeleton while streaming */}
+        {isStreaming && !spec && (
+          <div ref={outputRef} className="mt-10">
+            <SpecSkeleton />
+          </div>
+        )}
+
+        {/* Spec output once done */}
         {spec && (
           <div ref={outputRef} className="mt-10">
-            <SpecOutput spec={spec} onReset={() => setSpec(null)} />
+            <SpecOutput spec={spec} onReset={handleReset} />
           </div>
         )}
       </div>

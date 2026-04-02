@@ -1,24 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-
-interface Spec {
-  vision: string;
-  users: string;
-  features: string[];
-  flows: { name: string; steps: string[]; error_path: string }[];
-  architecture: string;
-  requirements: string;
-}
+import { validateSpecStructure, type Spec } from '@/lib/validate-spec';
 
 interface SpecFormProps {
   onResult: (spec: Spec) => void;
+  onStreamingChange?: (streaming: boolean) => void;
 }
 
 const MAX_CHARS = 2000;
 const MIN_CHARS_FOR_GREEN = 100;
 
-export default function SpecForm({ onResult }: SpecFormProps) {
+export default function SpecForm({ onResult, onStreamingChange }: SpecFormProps) {
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -37,15 +30,65 @@ export default function SpecForm({ onResult }: SpecFormProps) {
         body: JSON.stringify({ description }),
       });
 
-      const data = await res.json();
-
       if (!res.ok) {
+        const data = await res.json();
         setError(data.error ?? 'An unexpected error occurred. Please try again.');
         return;
       }
 
-      onResult(data.spec);
+      if (!res.body) {
+        setError('An unexpected error occurred. Please try again.');
+        return;
+      }
+
+      onStreamingChange?.(true);
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let accumulated = '';
+
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          accumulated += decoder.decode(value, { stream: true });
+        }
+      } catch {
+        onStreamingChange?.(false);
+        setError('La conexión se interrumpió. Por favor, intenta de nuevo.');
+        return;
+      }
+
+      onStreamingChange?.(false);
+
+      // Check for server-side error signal embedded in the stream
+      if (accumulated.includes('\n\n__ERROR__:')) {
+        setError('No se pudo generar la especificación. Por favor, intenta de nuevo.');
+        return;
+      }
+
+      // Parse and validate the accumulated JSON
+      let rawText = accumulated.trim();
+      if (rawText.startsWith('```')) {
+        rawText = rawText.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '');
+      }
+
+      let parsed: unknown;
+      try {
+        parsed = JSON.parse(rawText);
+      } catch {
+        setError('No se pudo generar la especificación. Por favor, intenta de nuevo.');
+        return;
+      }
+
+      if (!validateSpecStructure(parsed)) {
+        setError('No se pudo generar la especificación. Por favor, intenta de nuevo.');
+        return;
+      }
+
+      onResult(parsed);
     } catch {
+      onStreamingChange?.(false);
       setError('Could not connect to the server. Please check your connection and try again.');
     } finally {
       setLoading(false);

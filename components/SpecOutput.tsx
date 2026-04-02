@@ -3,21 +3,7 @@
 import { useState, useEffect } from 'react';
 import { downloadMarkdown } from '@/lib/markdown-export';
 import { downloadPDF } from '@/lib/pdf-export';
-
-interface Flow {
-  name: string;
-  steps: string[];
-  error_path: string;
-}
-
-interface Spec {
-  vision: string;
-  users: string;
-  features: string[];
-  flows: Flow[];
-  architecture: string;
-  requirements: string;
-}
+import type { Spec } from '@/lib/validate-spec';
 
 interface SpecOutputProps {
   spec: Spec;
