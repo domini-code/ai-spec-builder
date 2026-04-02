@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { UserButton } from '@clerk/nextjs';
 import SpecForm from '@/components/SpecForm';
 import SpecOutput from '@/components/SpecOutput';
 import SpecSkeleton from '@/components/SpecSkeleton';
@@ -62,7 +63,10 @@ export default function Home() {
       <main className="flex-1 px-4 py-16 overflow-y-auto">
         <div className="mx-auto max-w-3xl">
           {/* Header */}
-          <div className="mb-10 text-center">
+          <div className="mb-10 text-center relative">
+            <div className="absolute right-0 top-0">
+              <UserButton />
+            </div>
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 mb-3">
               AI Spec Builder
             </h1>

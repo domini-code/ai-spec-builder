@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@clerk/nextjs/server';
 import { anthropic } from '@/lib/anthropic';
 import { checkRateLimit, getClientIp } from '@/lib/rate-limiter';
 import Anthropic from '@anthropic-ai/sdk';
@@ -43,6 +44,11 @@ Rules:
 IMPORTANT: Return the JSON object directly. Do NOT wrap it in any parent key like spec, data, result or any other wrapper. The root of your response must be the JSON object itself.`;
 
 export async function POST(request: NextRequest) {
+  const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   const ip = getClientIp(request);
   const { allowed, retryAfter } = checkRateLimit(ip);
 
