@@ -138,5 +138,6 @@ AI Spec Builder convierte cualquier idea de producto en una especificación téc
 
 Exportar como Markdown
 Exportar como PDF
+Streaming en la respusta
 
 ---
