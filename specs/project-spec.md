@@ -141,5 +141,6 @@ Exportar como PDF
 Streaming en la respusta
 Historial de specs
 Login con Clerk
+HomePage publica
 
 ---
