@@ -130,7 +130,7 @@ El proyecto incluye un `CLAUDE.md` con el contexto completo del producto. Si con
 
 ## Recursos del curso
 
-- [Repo de recursos](https://github.com/dominicode/construye-con-ia-recursos) — Plantillas, ejercicios y cheatsheets del curso
+- [Repo de recursos](https://github.com/domini-code/construye-con-ia-recursos) — Plantillas, ejercicios y cheatsheets del curso
 - [Plantilla Spec-First](https://dominicode.com/spec-driven-development) — Recurso gratuito
 - [DominiCode](https://dominicode.com)
 
