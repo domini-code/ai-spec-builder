@@ -15,6 +15,7 @@ export default function Home() {
   const [isStreaming, setIsStreaming] = useState(false);
   const [currentSpecId, setCurrentSpecId] = useState<string | null>(null);
   const [historyRefresh, setHistoryRefresh] = useState(0);
+  const [sessionCount, setSessionCount] = useState(0);
   const outputRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -29,6 +30,7 @@ export default function Home() {
     setHistoryRefresh((v) => v + 1);
     setIsStreaming(false);
     setSpec(s);
+    setSessionCount((c) => c + 1);
   }
 
   function handleReset() {
@@ -73,6 +75,14 @@ export default function Home() {
             <p className="text-lg text-gray-500">
               Convert any product idea into a complete technical specification in minutes.
             </p>
+            {sessionCount > 0 && (
+              <div className="mt-3">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-green-50 px-3 py-1 text-sm font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                  <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
+                  {sessionCount} spec{sessionCount !== 1 ? 's' : ''} generated this session
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Form */}
