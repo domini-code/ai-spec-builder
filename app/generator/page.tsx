@@ -93,7 +93,7 @@ export default function Home() {
           {/* Spec output once done */}
           {spec && (
             <div ref={outputRef} className="mt-10">
-              <SpecOutput spec={spec} onReset={handleReset} />
+              <SpecOutput spec={spec} isStreaming={isStreaming} onReset={handleReset} />
             </div>
           )}
         </div>
